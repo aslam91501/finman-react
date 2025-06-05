@@ -12,8 +12,18 @@ export const UserRegistrationSchema = z.object({
     path: ['confirmPassword']
 })
 
+export type UserRegistrationRequest = z.infer<typeof UserRegistrationSchema>
 
-export type UserRegistrationRequest = z.infer<typeof UserRegistrationSchema>;
+
+
+export const LoginRequestSchema = z.object({
+    email: z.string().email('Email should be valid'),
+    password: z.string().min(8, 'Password should be atleast 8 characters')
+})
+
+export type LoginRequest = z.infer<typeof LoginRequestSchema>
+
+
 
 export interface UserData {
     id: string;

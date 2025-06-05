@@ -8,7 +8,7 @@ import { ResetPasswordPage } from "./auth/pages/reset-password"
 export const App = () => {
 	return (
 		<Routes>
-			<Route path="/" element={<AuthenticatedLayout />} />
+			<Route path="/dashboard" element={<AuthenticatedLayout />} />
 			<Route element={<UnauthenticatedLayout />}>
 				<Route path="/signup" element={<SignupPage />} />
 				<Route path="/login" element={<LoginPage />} />
