@@ -1,6 +1,7 @@
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@heroui/react"
 import { SidebarOpen, SidebarClose, LogOut, Menu } from "lucide-react"
 import { useState } from "react"
+import { useLogout } from "../../auth/config/hooks"
 
 export const Navbar = ({ isSidebarCollapsed, setSidebarCollapsed }: {
     isSidebarCollapsed: boolean,
@@ -9,6 +10,8 @@ export const Navbar = ({ isSidebarCollapsed, setSidebarCollapsed }: {
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+
+    const { logout } = useLogout();
 
     return (
 
@@ -31,7 +34,7 @@ export const Navbar = ({ isSidebarCollapsed, setSidebarCollapsed }: {
                     <ModalBody>Are you sure you want to logout?</ModalBody>
                     <ModalFooter>
                         <Button variant="light" onPress={onClose}>Close</Button>
-                        <Button variant="solid" color="primary" onPress={onClose}>Logout</Button>
+                        <Button variant="solid" color="primary" onPress={() => logout()}>Logout</Button>
                     </ModalFooter>
                 </ModalContent>
             </Modal>

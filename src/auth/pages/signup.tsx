@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 export const SignupPage = () => {
     const navigate = useNavigate();
-    const { registerUser } = useRegisterUser();
+    const { registerUser, isLoading } = useRegisterUser();
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm<UserRegistrationRequest>({
         resolver: zodResolver(UserRegistrationSchema)
@@ -51,8 +51,8 @@ export const SignupPage = () => {
 
             <Spacer />
 
-            <Button color='primary' type='submit'>Sign Up</Button>
-            <Button variant='light' onClick={() => navigate('/login')}>I already have an account.</Button>
+            <Button isLoading={isLoading} isDisabled={isLoading} color='primary' type='submit'>Sign Up</Button>
+            <Button variant='light' onPress={() => navigate('/login')}>I already have an account.</Button>
         </form>
 
     )

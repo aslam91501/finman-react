@@ -6,7 +6,7 @@ import { LoginRequestSchema } from '../config/models';
 import { useLogin } from '../config/hooks';
 
 export const LoginPage = () => {
-    const { login } = useLogin();
+    const { login, isLoading } = useLogin();
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm<LoginRequest>({
         resolver: zodResolver(LoginRequestSchema)
@@ -29,7 +29,7 @@ export const LoginPage = () => {
 
             <Spacer />
 
-            <Button color='primary' type='submit'>Log In</Button>
+            <Button isLoading={isLoading} isDisabled={isLoading} color='primary' type='submit'>Log In</Button>
             <Button variant='light'>Create a new account.</Button>
         </form>
 

@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query"
 import type { LoginRequest, UserRegistrationRequest } from "./models"
-import { attemptLogin, getUserData, registerUser } from "./services"
+import { attemptLogin, getUserData, logout, registerUser } from "./services"
 import { useNavigate } from "react-router-dom"
 import { useToast } from "../../common/config/hooks"
 
@@ -39,14 +39,29 @@ export const useLogin = () => {
         login: mutate,
         isLoading: isPending
     }
+}
 
+export const useLogout = () => {
+    const navigate = useNavigate();
+
+    const { mutate } = useMutation({
+        mutationFn: () => logout(),
+        onSuccess: () => {
+            navigate('/login')
+        }
+    })
+
+    return {
+        logout: mutate
+    }
 }
 
 
 export const useIsAuthenticated = () => {
     const { data, isLoading, isError } = useQuery({
         queryKey: ['user-data'],
-        queryFn: () => getUserData()
+        queryFn: () => getUserData(),
+        retry: false,
     })
 
     return {

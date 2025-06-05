@@ -13,6 +13,10 @@ export const attemptLogin = async (request: LoginRequest) => {
         .authWithPassword(request.email, request.password)
 }
 
+export const logout = async () => {
+    return server.authStore.clear()
+}
+
 export const getUserData = async (): Promise<UserData> => {
     console.log(server.authStore);
 
