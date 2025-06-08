@@ -2,7 +2,7 @@ import { ArrowLeftRight, Box, LayoutDashboard, ShieldUser, Wallet } from 'lucide
 import logo from '/logo.svg'
 import logoIcon from '/logo-icon-only.svg'
 import { cn, Spacer, Tooltip } from '@heroui/react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 export const Sidebar = ({ isCollapsed }: {
     isCollapsed: boolean
@@ -32,10 +32,18 @@ export const Sidebar = ({ isCollapsed }: {
 const SidebarItem = ({ icon, label, collapsed, link }: { link: string, icon: React.ReactNode, label: string, collapsed: boolean }) => {
     const navigate = useNavigate();
 
+    const location = useLocation().pathname;
+
+    const isActive = location.startsWith(link);
+
     if (collapsed)
         return (
             <Tooltip content={label} placement='right' color='primary'>
-                <div onClick={() => navigate(link)} className='flex flex-row gap-5 items-center hover:cursor-pointer hover:bg-blue-100 py-4 hover:text-blue-600 px-5 rounded-md transition-all'>
+                <div onClick={() => navigate(link)}
+                    className={cn(
+                        'flex flex-row gap-5 items-center hover:cursor-pointer hover:bg-blue-100 py-4 hover:text-blue-600 px-5 rounded-md transition-all',
+                        { 'bg-blue-100 py-4 text-blue-600': isActive }
+                    )}>
                     <i>{icon}</i>
                     <span className={cn('tracking-wide font-medium overflow-hidden', {
                         "w-0": collapsed,
@@ -44,7 +52,10 @@ const SidebarItem = ({ icon, label, collapsed, link }: { link: string, icon: Rea
             </Tooltip>
         )
     else return (
-        <div onClick={() => navigate(link)} className='flex flex-row gap-5 items-center hover:cursor-pointer hover:bg-blue-100 py-4 hover:text-blue-600 px-5 rounded-md transition-all'>
+        <div onClick={() => navigate(link)} className={cn(
+            'flex flex-row gap-5 items-center hover:cursor-pointer hover:bg-blue-100 py-4 hover:text-blue-600 px-5 rounded-md transition-all',
+            { 'bg-blue-100 py-4 text-blue-600': isActive }
+        )}>
             <i>{icon}</i>
             <span className={cn('tracking-wide font-medium overflow-hidden', {
                 "w-0": collapsed,
