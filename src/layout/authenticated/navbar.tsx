@@ -1,7 +1,7 @@
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@heroui/react"
-import { SidebarOpen, SidebarClose, LogOut, Menu } from "lucide-react"
-import { useState } from "react"
+import { SidebarOpen, SidebarClose, LogOut } from "lucide-react"
 import { useLogout } from "../../auth/config/hooks"
+import { MobileNav } from "./mobile-nav"
 
 export const Navbar = ({ isSidebarCollapsed, setSidebarCollapsed }: {
     isSidebarCollapsed: boolean,
@@ -9,7 +9,6 @@ export const Navbar = ({ isSidebarCollapsed, setSidebarCollapsed }: {
 }) => {
 
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
     const { logout } = useLogout();
 
@@ -19,9 +18,7 @@ export const Navbar = ({ isSidebarCollapsed, setSidebarCollapsed }: {
             <Button className="hidden lg:flex" isIconOnly radius="full" variant="light" onPress={() => setSidebarCollapsed(!isSidebarCollapsed)} >
                 {isSidebarCollapsed ? <SidebarOpen size={20} /> : <SidebarClose size={20} />}
             </Button>
-            <Button className="lg:hidden" isIconOnly radius="full" variant="light" onPress={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-                <Menu size={20} />
-            </Button>
+            <MobileNav />
 
 
             <Button isIconOnly radius="full" variant="light" onPress={onOpen}>
@@ -38,6 +35,7 @@ export const Navbar = ({ isSidebarCollapsed, setSidebarCollapsed }: {
                     </ModalFooter>
                 </ModalContent>
             </Modal>
+
         </nav>
     )
 }

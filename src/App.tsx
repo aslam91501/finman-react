@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom"
+import { Navigate, Route, Routes } from "react-router-dom"
 import { AuthenticatedLayout } from "./layout/authenticated"
 import { SignupPage } from "./auth/pages/signup"
 import { UnauthenticatedLayout } from "./layout/unauthenticated"
@@ -8,6 +8,7 @@ import { ResetPasswordPage } from "./auth/pages/reset-password"
 export const App = () => {
 	return (
 		<Routes>
+			<Route path="/" element={<Navigate to='/login' />} />
 			<Route path="/dashboard" element={<AuthenticatedLayout />} />
 			<Route element={<UnauthenticatedLayout />}>
 				<Route path="/signup" element={<SignupPage />} />

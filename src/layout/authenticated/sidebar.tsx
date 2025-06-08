@@ -2,6 +2,7 @@ import { ArrowLeftRight, Box, LayoutDashboard, ShieldUser, Wallet } from 'lucide
 import logo from '/logo.svg'
 import logoIcon from '/logo-icon-only.svg'
 import { cn, Spacer, Tooltip } from '@heroui/react'
+import { useNavigate } from 'react-router-dom'
 
 export const Sidebar = ({ isCollapsed }: {
     isCollapsed: boolean
@@ -18,21 +19,23 @@ export const Sidebar = ({ isCollapsed }: {
             </div>
 
             <Spacer />
-            <SidebarItem icon={<LayoutDashboard size={24} />} label="Dashboard" collapsed={isCollapsed} />
-            <SidebarItem icon={<ArrowLeftRight size={24} />} label="Transactions" collapsed={isCollapsed} />
-            <SidebarItem icon={<Wallet size={24} />} label="Budget" collapsed={isCollapsed} />
-            <SidebarItem icon={<Box size={24} />} label="Categories" collapsed={isCollapsed} />
-            <SidebarItem icon={<ShieldUser size={24} />} label="Profile" collapsed={isCollapsed} />
+            <SidebarItem link='/dashboard' icon={<LayoutDashboard size={24} />} label="Dashboard" collapsed={isCollapsed} />
+            <SidebarItem link='/transactions' icon={<ArrowLeftRight size={24} />} label="Transactions" collapsed={isCollapsed} />
+            <SidebarItem link='/budget' icon={<Wallet size={24} />} label="Budget" collapsed={isCollapsed} />
+            <SidebarItem link='/categories' icon={<Box size={24} />} label="Categories" collapsed={isCollapsed} />
+            <SidebarItem link='/profile' icon={<ShieldUser size={24} />} label="Profile" collapsed={isCollapsed} />
         </aside>
     )
 }
 
 
-const SidebarItem = ({ icon, label, collapsed }: { icon: React.ReactNode, label: string, collapsed: boolean }) => {
+const SidebarItem = ({ icon, label, collapsed, link }: { link: string, icon: React.ReactNode, label: string, collapsed: boolean }) => {
+    const navigate = useNavigate();
+
     if (collapsed)
         return (
             <Tooltip content={label} placement='right' color='primary'>
-                <div className='flex flex-row gap-5 items-center hover:cursor-pointer hover:bg-blue-100 py-4 hover:text-blue-600 px-5 rounded-md transition-all'>
+                <div onClick={() => navigate(link)} className='flex flex-row gap-5 items-center hover:cursor-pointer hover:bg-blue-100 py-4 hover:text-blue-600 px-5 rounded-md transition-all'>
                     <i>{icon}</i>
                     <span className={cn('tracking-wide font-medium overflow-hidden', {
                         "w-0": collapsed,
@@ -41,7 +44,7 @@ const SidebarItem = ({ icon, label, collapsed }: { icon: React.ReactNode, label:
             </Tooltip>
         )
     else return (
-        <div className='flex flex-row gap-5 items-center hover:cursor-pointer hover:bg-blue-100 py-4 hover:text-blue-600 px-5 rounded-md transition-all'>
+        <div onClick={() => navigate(link)} className='flex flex-row gap-5 items-center hover:cursor-pointer hover:bg-blue-100 py-4 hover:text-blue-600 px-5 rounded-md transition-all'>
             <i>{icon}</i>
             <span className={cn('tracking-wide font-medium overflow-hidden', {
                 "w-0": collapsed,
