@@ -8,7 +8,7 @@ export const Sidebar = ({ isCollapsed }: {
     isCollapsed: boolean
 }) => {
     return (
-        <aside className={cn("hidden lg:flex bg-neutral-100 border-r flex-col gap-4 py-8 transition-all overflow-hidden", {
+        <aside className={cn("hidden lg:flex bg-gray-100 border-r flex-col gap-4 py-8 transition-all overflow-hidden", {
             "basis-20": isCollapsed,
             "basis-72": !isCollapsed,
             "px-5": !isCollapsed,
@@ -41,8 +41,8 @@ const SidebarItem = ({ icon, label, collapsed, link }: { link: string, icon: Rea
             <Tooltip content={label} placement='right' color='primary'>
                 <div onClick={() => navigate(link)}
                     className={cn(
-                        'flex flex-row gap-5 items-center hover:cursor-pointer hover:bg-blue-100 py-4 hover:text-blue-600 px-5 rounded-md transition-all',
-                        { 'bg-blue-100 py-4 text-blue-600': isActive }
+                        'flex flex-row gap-5 items-center hover:cursor-pointer hover:bg-blue-100 py-4 hover:text-primary px-5 rounded-md transition-all',
+                        { 'bg-blue-100 py-4 text-primary': isActive }
                     )}>
                     <i>{icon}</i>
                     <span className={cn('tracking-wide font-medium overflow-hidden', {

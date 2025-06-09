@@ -28,7 +28,7 @@ export const AuthenticatedLayout = () => {
     return (
         <div className="flex flex-row min-h-screen w-screen max-w-full">
             <Sidebar isCollapsed={isSidebarCollapsed} />
-            <div className="flex-grow bg-neutral-50 flex flex-col">
+            <div className="flex-grow bg-gray-50 flex flex-col">
                 <Navbar isSidebarCollapsed={isSidebarCollapsed} setSidebarCollapsed={setSidebarCollapsed} />
                 <main className="py-5 px-10">
                     <Outlet />
