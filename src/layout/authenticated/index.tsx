@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom"
+import { Outlet, useNavigate } from "react-router-dom"
 import { useIsAuthenticated } from "../../auth/config/hooks"
 import { Navbar } from "./navbar"
 import { Sidebar } from "./sidebar"
@@ -28,9 +28,12 @@ export const AuthenticatedLayout = () => {
     return (
         <div className="flex flex-row min-h-screen w-screen max-w-full">
             <Sidebar isCollapsed={isSidebarCollapsed} />
-            <main className="flex-grow bg-neutral-50 flex flex-col">
+            <div className="flex-grow bg-neutral-50 flex flex-col">
                 <Navbar isSidebarCollapsed={isSidebarCollapsed} setSidebarCollapsed={setSidebarCollapsed} />
-            </main>
+                <main className="py-5 px-10">
+                    <Outlet />
+                </main>
+            </div>
         </div>
     )
 }

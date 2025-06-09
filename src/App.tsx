@@ -4,12 +4,17 @@ import { SignupPage } from "./auth/pages/signup"
 import { UnauthenticatedLayout } from "./layout/unauthenticated"
 import { LoginPage } from "./auth/pages/login"
 import { ResetPasswordPage } from "./auth/pages/reset-password"
+import { DashboardPage } from "./dashboard"
+import { TransactionsPage } from "./transaction/pages"
 
 export const App = () => {
 	return (
 		<Routes>
 			<Route path="/" element={<Navigate to='/login' />} />
-			<Route path="/dashboard" element={<AuthenticatedLayout />} />
+			<Route element={<AuthenticatedLayout />}>
+				<Route path="/dashboard" element={<DashboardPage />} />
+				<Route path="/transactions" element={<TransactionsPage />} />
+			</Route>
 			<Route element={<UnauthenticatedLayout />}>
 				<Route path="/signup" element={<SignupPage />} />
 				<Route path="/login" element={<LoginPage />} />

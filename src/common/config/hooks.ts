@@ -1,6 +1,6 @@
 import { addToast } from "@heroui/react"
 
-export const useToast = () => {
+export const useCustomToast = () => {
     const toast = (title: string, description?: string) => {
         addToast({
             title,

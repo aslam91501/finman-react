@@ -2,11 +2,11 @@ import { useMutation, useQuery } from "@tanstack/react-query"
 import type { LoginRequest, UserRegistrationRequest } from "./models"
 import { attemptLogin, getUserData, logout, registerUser } from "./services"
 import { useNavigate } from "react-router-dom"
-import { useToast } from "../../common/config/hooks"
+import { useCustomToast } from "../../common/config/hooks"
 
 export const useRegisterUser = () => {
     const navigate = useNavigate();
-    const { toast } = useToast();
+    const { toast } = useCustomToast();
 
     const { mutate, isPending } = useMutation({
         mutationFn: (request: UserRegistrationRequest) => registerUser(request),
@@ -25,7 +25,7 @@ export const useRegisterUser = () => {
 
 export const useLogin = () => {
     const navigate = useNavigate();
-    const { toast } = useToast();
+    const { toast } = useCustomToast();
 
     const { mutate, isPending } = useMutation({
         mutationFn: (request: LoginRequest) => attemptLogin(request),
