@@ -14,11 +14,13 @@ interface Props {
 export const NewCategoryForm = ({ onOpenChange, isOpen, handleCreate }: Props) => {
     const { userData } = useIsAuthenticated();
 
+    console.log(userData)
+
     const { register, handleSubmit, reset, formState: { errors } } = useForm<CategoryCreateRequest>({
         resolver: zodResolver(CategoryCreateSchema),
         defaultValues: {
             type: 'EXPENSE',
-            userId: userData?.id!
+            userId: userData!.id!
         }
     })
 

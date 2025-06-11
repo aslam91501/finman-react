@@ -3,7 +3,8 @@ import type { CategoryCreateRequest, CategoryUpdateRequest, Category } from "./m
 
 export const createCategory = async (request: CategoryCreateRequest) => {
     return await server.collection('categories').create({
-        ...request
+        ...request,
+        user: request.userId
     })
 }
 

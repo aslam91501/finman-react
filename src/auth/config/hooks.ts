@@ -65,7 +65,7 @@ export const useIsAuthenticated = () => {
 
     return {
         userData: data,
-        isAuthenticated: !!data,
+        isAuthenticated: !!data && !!data.id,
         isLoading,
         isError
     }
