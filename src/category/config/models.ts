@@ -8,6 +8,14 @@ export const CategoryCreateSchema = z.object({
 
 export type CategoryCreateRequest = z.infer<typeof CategoryCreateSchema>
 
+
+
+export const CategoryUpdateSchema = CategoryCreateSchema.extend({
+    id: z.string().min(3, "Id is required")
+})
+
+export type CategoryUpdateRequest = z.infer<typeof CategoryUpdateSchema>;
+
 export interface Category {
     id: string;
     name: string;

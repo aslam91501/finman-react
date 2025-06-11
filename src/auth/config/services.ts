@@ -18,16 +18,13 @@ export const logout = async () => {
 }
 
 export const getUserData = async (): Promise<UserData> => {
-    console.log(server.authStore);
 
     if (!server.authStore.isValid || !server.authStore.record?.id)
         throw new Error('Unauthorized')
 
-    console.log("User", server.authStore.record)
 
     const user = await server.collection('users').getOne<UserData>(server.authStore.record.id);
 
-    console.log("fetched", user)
 
 
     return Promise.resolve(user);

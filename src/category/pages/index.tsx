@@ -1,6 +1,6 @@
 import { Button, Input, Spacer, useDisclosure } from "@heroui/react"
 import { Filter, Plus, Search } from "lucide-react"
-import { useCreateCategory, useGetCategories } from "../config/hooks";
+import { useCreateCategory, useDeleteCategory, useGetCategories, useUpdateCategory } from "../config/hooks";
 import { CategoriesTable } from "../components/categories-table";
 import { NewCategoryForm } from "../components/new-category-form";
 
@@ -9,6 +9,8 @@ export const CategoriesPage = () => {
     const { createCategory } = useCreateCategory();
 
     const { data, isLoading, isError } = useGetCategories();
+    const { updateCategory } = useUpdateCategory();
+    const { deleteCategory } = useDeleteCategory();
 
     if (isLoading) {
         return <div>Loading...</div>
@@ -38,7 +40,11 @@ export const CategoriesPage = () => {
                 handleCreate={(data) => { createCategory(data); onOpenChange(); }}
                 isOpen={isOpen} />
 
-            <CategoriesTable data={data!} />
+            <CategoriesTable
+                data={data!}
+                handleUpdate={(req) => updateCategory(req)}
+                handleDelete={(id) => deleteCategory(id)}
+            />
         </div>
     )
 }

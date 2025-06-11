@@ -1,13 +1,18 @@
-import type { Category } from "../config/models";
+import type { Category, CategoryUpdateRequest } from "../config/models";
 import { Table, TableBody, TableCell, TableHeader, TableColumn, TableRow, Dropdown, DropdownTrigger, Button, DropdownMenu, DropdownItem, Chip } from "@heroui/react";
 import { MoreVertical } from "lucide-react"
 import type { TransactionType } from "../../transaction/config/models";
+import { useMultiModal } from "../../common/config/hooks";
+import { DeleteDialog } from "../../common/components/delete-dialog";
+import { UpdateCategoryModal } from "./update-category-modal";
 
 interface Props {
     data: Category[];
+    handleDelete: (id: string) => void;
+    handleUpdate: (req: CategoryUpdateRequest) => void;
 }
 
-export const CategoriesTable = (props: Props) => {
+export const CategoriesTable = ({ data, handleDelete, handleUpdate }: Props) => {
     const getTypeChip = (type: TransactionType) => {
         if (type === 'INCOME') {
             return (
@@ -19,6 +24,9 @@ export const CategoriesTable = (props: Props) => {
             )
         }
     }
+
+    const { toggle: deleteToggle, isOpen: deleteIsOpen } = useMultiModal();
+    const { toggle: updateToggle, isOpen: updateIsOpen } = useMultiModal();
 
     return (
         <Table
@@ -36,7 +44,7 @@ export const CategoriesTable = (props: Props) => {
                 <TableColumn>Actions</TableColumn>
             </TableHeader>
             <TableBody>
-                {props.data.map((category) => (
+                {data.map((category) => (
                     <TableRow key={category.id}>
                         <TableCell>{category.name}</TableCell>
                         <TableCell>{getTypeChip(category.type)}</TableCell>
@@ -48,10 +56,23 @@ export const CategoriesTable = (props: Props) => {
                                     </Button>
                                 </DropdownTrigger>
                                 <DropdownMenu>
-                                    <DropdownItem key="edit">Edit</DropdownItem>
-                                    <DropdownItem key="delete">Delete</DropdownItem>
+                                    <DropdownItem onPress={() => updateToggle(category.id)} key="edit">Edit</DropdownItem>
+                                    <DropdownItem onPress={() => deleteToggle(category.id)} key="delete">Delete</DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
+
+                            <DeleteDialog
+                                isOpen={deleteIsOpen.get(category.id) ?? false}
+                                onOpenChange={() => deleteToggle(category.id)}
+                                handleDelete={() => handleDelete(category.id)}
+                            />
+
+                            <UpdateCategoryModal
+                                isOpen={updateIsOpen.get(category.id) ?? false}
+                                onOpenChange={() => updateToggle(category.id)}
+                                category={category}
+                                handleUpdate={(req) => { handleUpdate(req); updateToggle(category.id) }}
+                            />
                         </TableCell>
                     </TableRow>
                 ))}
