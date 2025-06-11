@@ -7,6 +7,7 @@ import { useMultiModal } from "../../common/config/hooks"
 import { DeleteDialog } from "../../common/components/delete-dialog"
 import { UpdateTransactionForm } from "./update-transaction-form"
 import type { UpdateTransactionRequest } from "../config/models"
+import { TransactionDetailModal } from "./transaction-detail-modal"
 
 interface Props {
     data: PageResult<Transaction>
@@ -39,6 +40,7 @@ export const TransactionsTable = ({ data, handleDelete, handleUpdate }: Props) =
 
     const { toggle: deleteToggle, isOpen: deleteIsOpen } = useMultiModal();
     const { toggle: updateToggle, isOpen: updateIsOpen } = useMultiModal();
+    const { toggle: detailToggle, isOpen: detailIsOpen } = useMultiModal();
 
     return (
         <Table
@@ -75,6 +77,7 @@ export const TransactionsTable = ({ data, handleDelete, handleUpdate }: Props) =
                                 <DropdownMenu>
                                     <DropdownItem onPress={() => updateToggle(item.id)} key="edit">Edit</DropdownItem>
                                     <DropdownItem onPress={() => deleteToggle(item.id)} key="delete">Delete</DropdownItem>
+                                    <DropdownItem onPress={() => detailToggle(item.id)} key="detail">View</DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
 
@@ -88,6 +91,12 @@ export const TransactionsTable = ({ data, handleDelete, handleUpdate }: Props) =
                                 isOpen={updateIsOpen.get(item.id) ?? false}
                                 onOpenChange={() => updateToggle(item.id)}
                                 handleUpdate={(req) => { handleUpdate(req); updateToggle(item.id) }}
+                                transaction={item}
+                            />
+
+                            <TransactionDetailModal
+                                isOpen={detailIsOpen.get(item.id) ?? false}
+                                onOpenChange={() => detailToggle(item.id)}
                                 transaction={item}
                             />
                         </TableCell>
