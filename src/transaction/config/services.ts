@@ -14,3 +14,8 @@ export const getTransactions = async (userId: string, page: number) => {
         filter: `user.id="${userId}"`
     })
 }
+
+
+export const deleteTransaction = async (id: string) => {
+    return await server.collection('transactions').delete(id)
+}

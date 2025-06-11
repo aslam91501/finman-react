@@ -3,12 +3,15 @@ import { MoreVertical } from "lucide-react"
 import { Paginator } from "../../common/components/paginator"
 import type { PageResult } from "../../common/config/models"
 import type { Transaction, TransactionType } from "../config/models"
+import { useMultiModal } from "../../common/config/hooks"
+import { DeleteDialog } from "../../common/components/delete-dialog"
 
 interface Props {
     data: PageResult<Transaction>
+    handleDelete: (id: string) => void
 }
 
-export const TransactionsTable = ({ data }: Props) => {
+export const TransactionsTable = ({ data, handleDelete }: Props) => {
     const page = data.page;
     const totalPages = data.totalPages;
     const items = data.items;
@@ -30,6 +33,8 @@ export const TransactionsTable = ({ data }: Props) => {
             )
         }
     }
+
+    const { toggle: deleteToggle, isOpen: deleteIsOpen } = useMultiModal();
 
     return (
         <Table
@@ -65,9 +70,15 @@ export const TransactionsTable = ({ data }: Props) => {
                                 </DropdownTrigger>
                                 <DropdownMenu>
                                     <DropdownItem key="edit">Edit</DropdownItem>
-                                    <DropdownItem key="delete">Delete</DropdownItem>
+                                    <DropdownItem onPress={() => deleteToggle(item.id)} key="delete">Delete</DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
+
+                            <DeleteDialog
+                                isOpen={deleteIsOpen.get(item.id) ?? false}
+                                onOpenChange={() => deleteToggle(item.id)}
+                                handleDelete={() => handleDelete(item.id)}
+                            />
                         </TableCell>
                     </TableRow>
                 ))}
