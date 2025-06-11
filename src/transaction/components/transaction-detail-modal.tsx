@@ -1,5 +1,6 @@
 import { Modal, ModalBody, ModalContent, ModalHeader, Chip } from "@heroui/react"
 import { type Transaction, type TransactionType } from "../config/models"
+import { format } from "date-fns";
 
 interface Props {
     isOpen: boolean;
@@ -38,7 +39,7 @@ export const TransactionDetailModal = ({ isOpen, onOpenChange, transaction }: Pr
 
                         <div>
                             <p className="font-medium text-gray-600 text-sm">Date</p>
-                            <p className="mt-2">{new Date(transaction.date).toISOString()}</p>
+                            <p className="mt-2">{format(new Date(transaction.date), 'dd  MMM  yyyy')}</p>
                         </div>
 
                         <div>

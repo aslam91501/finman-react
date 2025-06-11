@@ -8,6 +8,7 @@ import { DeleteDialog } from "../../common/components/delete-dialog"
 import { UpdateTransactionForm } from "./update-transaction-form"
 import type { UpdateTransactionRequest } from "../config/models"
 import { TransactionDetailModal } from "./transaction-detail-modal"
+import { format } from "date-fns"
 
 interface Props {
     data: PageResult<Transaction>
@@ -66,7 +67,7 @@ export const TransactionsTable = ({ data, handleDelete, handleUpdate }: Props) =
                         <TableCell>{item.title}</TableCell>
                         <TableCell>{item.amount}</TableCell>
                         <TableCell>{getTypeChip(item.type)}</TableCell>
-                        <TableCell>{new Date(item.date).toISOString()}</TableCell>
+                        <TableCell>{format(new Date(item.date), 'dd  MMM  yyyy')}</TableCell>
                         <TableCell>
                             <Dropdown>
                                 <DropdownTrigger>

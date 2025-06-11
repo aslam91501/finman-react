@@ -1,10 +1,11 @@
-import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, Textarea } from "@heroui/react"
+import { Button, CalendarDate, DatePicker, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, Textarea } from "@heroui/react"
 import { NewTransactionSchema, type NewTransactionRequest } from "../config/models"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useIsAuthenticated } from "../../auth/config/hooks"
 import { useGetCategories } from "../../category/config/hooks"
+import { getLocalTimeZone } from "@internationalized/date"
 
 interface Props {
     onOpenChange: () => void,
@@ -16,7 +17,7 @@ export const NewTransactionForm = ({ onOpenChange, isOpen, handleCreate }: Props
     const { userData } = useIsAuthenticated();
     const { data: categories } = useGetCategories();
 
-    const { register, handleSubmit, reset, watch, formState: { errors } } = useForm<NewTransactionRequest>({
+    const { register, handleSubmit, reset, watch, setValue, formState: { errors } } = useForm<NewTransactionRequest>({
         resolver: zodResolver(NewTransactionSchema),
         defaultValues: {
             date: new Date(),
@@ -24,6 +25,13 @@ export const NewTransactionForm = ({ onOpenChange, isOpen, handleCreate }: Props
             userId: userData?.id!
         }
     })
+
+    const [date, setDate] = useState<CalendarDate | null>();
+
+    useEffect(() => {
+        setValue('date', date?.toDate(getLocalTimeZone()) || new Date())
+    }, [date])
+
 
     const onSubmit = handleSubmit(data => {
         handleCreate(data);
@@ -53,6 +61,15 @@ export const NewTransactionForm = ({ onOpenChange, isOpen, handleCreate }: Props
                             isInvalid={!!errors.amount}
                             errorMessage={errors.amount?.message}
                             {...register("amount", { valueAsNumber: true })}
+                        />
+
+                        <DatePicker
+                            isInvalid={!!errors.date}
+                            errorMessage={errors.date?.message}
+                            isRequired
+                            showMonthAndYearPickers
+                            value={date}
+                            onChange={setDate}
                         />
 
 
