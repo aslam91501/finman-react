@@ -18,6 +18,8 @@ const TransactionSchema = z.object({
     notes: z.string(),
     amount: z.number().min(1, "Amount should be greater than or equal to 1"),
     type: z.enum(['INCOME', 'EXPENSE']),
+    userId: z.string().min(1, "User Id is required"),
+    categoryId: z.string(),
     date: z.date()
 })
 

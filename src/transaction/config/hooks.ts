@@ -4,6 +4,7 @@ import { createNewTransaction, getTransactions } from "./services"
 import { useCustomToast } from "../../common/config/hooks";
 import { useAtom } from "jotai";
 import { TransactionFilterStore } from "./stores";
+import { useIsAuthenticated } from "../../auth/config/hooks";
 
 export const useTransactionFilers = () => {
     const [filters, setFilters] = useAtom(TransactionFilterStore);
@@ -46,10 +47,11 @@ export const useCreateTransaction = (closeFn?: () => void) => {
 
 export const useGetTransactions = () => {
     const { page } = useTransactionFilers();
+    const { userData } = useIsAuthenticated();
 
     const { data, isLoading, isError } = useQuery({
         queryKey: ['transactions', page],
-        queryFn: () => getTransactions(page),
+        queryFn: () => getTransactions(userData?.id!, page),
     })
 
     return {

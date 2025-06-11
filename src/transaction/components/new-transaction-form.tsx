@@ -3,6 +3,8 @@ import { NewTransactionSchema, type NewTransactionRequest } from "../config/mode
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { useRef } from "react"
+import { useIsAuthenticated } from "../../auth/config/hooks"
+import { useGetCategories } from "../../category/config/hooks"
 
 interface Props {
     onOpenChange: () => void,
@@ -11,11 +13,15 @@ interface Props {
 }
 
 export const NewTransactionForm = ({ onOpenChange, isOpen, handleCreate }: Props) => {
-    const { register, handleSubmit, reset, formState: { errors } } = useForm<NewTransactionRequest>({
+    const { userData } = useIsAuthenticated();
+    const { data: categories } = useGetCategories();
+
+    const { register, handleSubmit, reset, watch, formState: { errors } } = useForm<NewTransactionRequest>({
         resolver: zodResolver(NewTransactionSchema),
         defaultValues: {
             date: new Date(),
-            type: 'EXPENSE'
+            type: 'EXPENSE',
+            userId: userData?.id!
         }
     })
 
@@ -58,6 +64,17 @@ export const NewTransactionForm = ({ onOpenChange, isOpen, handleCreate }: Props
                         >
                             <SelectItem key="INCOME">Income</SelectItem>
                             <SelectItem key="EXPENSE">Expense</SelectItem>
+                        </Select>
+
+                        <Select
+                            label="Category"
+                            isInvalid={!!errors.categoryId}
+                            errorMessage={errors.categoryId?.message}
+                            {...register('categoryId')}
+                        >
+                            {categories ? categories.filter((category) => category.type === watch('type'))?.map((category) => (
+                                <SelectItem key={category.id}>{category.name}</SelectItem>
+                            )) : null}
                         </Select>
 
                         <Textarea

@@ -1,24 +1,13 @@
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Dropdown, DropdownTrigger, Button, DropdownMenu, DropdownItem, Chip } from "@heroui/react"
+import type { Category } from "../config/models";
+import { Table, TableBody, TableCell, TableHeader, TableColumn, TableRow, Dropdown, DropdownTrigger, Button, DropdownMenu, DropdownItem, Chip } from "@heroui/react";
 import { MoreVertical } from "lucide-react"
-import { Paginator } from "../../common/components/paginator"
-import type { PageResult } from "../../common/config/models"
-import type { Transaction, TransactionType } from "../config/models"
+import type { TransactionType } from "../../transaction/config/models";
 
 interface Props {
-    data: PageResult<Transaction>
+    data: Category[];
 }
 
-export const TransactionsTable = ({ data }: Props) => {
-    const page = data.page;
-    const totalPages = data.totalPages;
-    const items = data.items;
-
-    const bottomContent = (
-        <div className="flex flex-row w-full justify-end">
-            <Paginator currentPage={page} totalPages={totalPages} />
-        </div>
-    )
-
+export const CategoriesTable = (props: Props) => {
     const getTypeChip = (type: TransactionType) => {
         if (type === 'INCOME') {
             return (
@@ -35,7 +24,6 @@ export const TransactionsTable = ({ data }: Props) => {
         <Table
             shadow="sm"
             radius="sm"
-            bottomContent={bottomContent}
             removeWrapper
             classNames={{
                 tr: ['border-b', 'hover:bg-gray-50', 'transition-all'],
@@ -43,19 +31,15 @@ export const TransactionsTable = ({ data }: Props) => {
             }}
         >
             <TableHeader>
-                <TableColumn allowsSorting>Title</TableColumn>
-                <TableColumn allowsSorting>Amount</TableColumn>
-                <TableColumn allowsSorting>Type</TableColumn>
-                <TableColumn allowsSorting>Date</TableColumn>
+                <TableColumn>Name</TableColumn>
+                <TableColumn>Category Type</TableColumn>
                 <TableColumn>Actions</TableColumn>
             </TableHeader>
             <TableBody>
-                {items.map((item) => (
-                    <TableRow key={item.id}>
-                        <TableCell>{item.title}</TableCell>
-                        <TableCell>{item.amount}</TableCell>
-                        <TableCell>{getTypeChip(item.type)}</TableCell>
-                        <TableCell>{new Date(item.date).toISOString()}</TableCell>
+                {props.data.map((category) => (
+                    <TableRow key={category.id}>
+                        <TableCell>{category.name}</TableCell>
+                        <TableCell>{getTypeChip(category.type)}</TableCell>
                         <TableCell>
                             <Dropdown>
                                 <DropdownTrigger>

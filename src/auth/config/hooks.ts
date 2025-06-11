@@ -22,7 +22,6 @@ export const useRegisterUser = () => {
     }
 }
 
-
 export const useLogin = () => {
     const navigate = useNavigate();
     const { toast } = useCustomToast();
