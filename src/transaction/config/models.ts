@@ -1,4 +1,5 @@
 import { z } from "zod"
+import type { Category } from "../../category/config/models"
 
 export type TransactionType = 'INCOME' | 'EXPENSE'
 
@@ -8,7 +9,8 @@ export interface Transaction {
     notes: string,
     amount: number,
     date: Date,
-    type: TransactionType
+    type: TransactionType,
+    category?: Category
 }
 
 
@@ -29,4 +31,6 @@ export const NewTransactionSchema = TransactionSchema.omit({
 
 export type NewTransactionRequest = z.infer<typeof NewTransactionSchema>;
 
-export type UpdateTransactionRequest = z.infer<typeof TransactionSchema>;
+
+export const UpdateTransactionSchema = TransactionSchema;
+export type UpdateTransactionRequest = z.infer<typeof UpdateTransactionSchema>;

@@ -5,13 +5,16 @@ import type { PageResult } from "../../common/config/models"
 import type { Transaction, TransactionType } from "../config/models"
 import { useMultiModal } from "../../common/config/hooks"
 import { DeleteDialog } from "../../common/components/delete-dialog"
+import { UpdateTransactionForm } from "./update-transaction-form"
+import type { UpdateTransactionRequest } from "../config/models"
 
 interface Props {
     data: PageResult<Transaction>
     handleDelete: (id: string) => void
+    handleUpdate: (req: UpdateTransactionRequest) => void
 }
 
-export const TransactionsTable = ({ data, handleDelete }: Props) => {
+export const TransactionsTable = ({ data, handleDelete, handleUpdate }: Props) => {
     const page = data.page;
     const totalPages = data.totalPages;
     const items = data.items;
@@ -35,6 +38,7 @@ export const TransactionsTable = ({ data, handleDelete }: Props) => {
     }
 
     const { toggle: deleteToggle, isOpen: deleteIsOpen } = useMultiModal();
+    const { toggle: updateToggle, isOpen: updateIsOpen } = useMultiModal();
 
     return (
         <Table
@@ -69,7 +73,7 @@ export const TransactionsTable = ({ data, handleDelete }: Props) => {
                                     </Button>
                                 </DropdownTrigger>
                                 <DropdownMenu>
-                                    <DropdownItem key="edit">Edit</DropdownItem>
+                                    <DropdownItem onPress={() => updateToggle(item.id)} key="edit">Edit</DropdownItem>
                                     <DropdownItem onPress={() => deleteToggle(item.id)} key="delete">Delete</DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
@@ -78,6 +82,13 @@ export const TransactionsTable = ({ data, handleDelete }: Props) => {
                                 isOpen={deleteIsOpen.get(item.id) ?? false}
                                 onOpenChange={() => deleteToggle(item.id)}
                                 handleDelete={() => handleDelete(item.id)}
+                            />
+
+                            <UpdateTransactionForm
+                                isOpen={updateIsOpen.get(item.id) ?? false}
+                                onOpenChange={() => updateToggle(item.id)}
+                                handleUpdate={(req) => { handleUpdate(req); updateToggle(item.id) }}
+                                transaction={item}
                             />
                         </TableCell>
                     </TableRow>

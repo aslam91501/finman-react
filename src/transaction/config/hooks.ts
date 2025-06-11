@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import type { NewTransactionRequest } from "./models"
-import { createNewTransaction, deleteTransaction, getTransactions } from "./services"
+import type { NewTransactionRequest, UpdateTransactionRequest } from "./models"
+import { createNewTransaction, deleteTransaction, getTransactions, updateTransaction } from "./services"
 import { useCustomToast } from "../../common/config/hooks";
 import { useAtom } from "jotai";
 import { TransactionFilterStore } from "./stores";
@@ -85,3 +85,28 @@ export const useDeleteTransaction = () => {
         isLoading: status === 'pending'
     }
 }
+
+export const useUpdateTransaction = () => {
+    const queryClient = useQueryClient();
+    const { page } = useTransactionFilers();
+
+    const { toast } = useCustomToast();
+    const { mutate, status } = useMutation({
+        mutationFn: (req: UpdateTransactionRequest) => updateTransaction(req),
+        onSuccess: () => {
+            toast('Updated Transaction')
+            queryClient.invalidateQueries({
+                queryKey: ['transactions', page]
+            })
+        },
+        onError: () => {
+            toast('Failed to update Transaction')
+        }
+    })
+
+    return {
+        updateTransaction: mutate,
+        isLoading: status === 'pending'
+    }
+}
+

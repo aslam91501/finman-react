@@ -1,7 +1,7 @@
 import { Button, Input, Spacer, useDisclosure } from "@heroui/react"
 import { Filter, Plus, Search } from "lucide-react"
 import { NewTransactionForm } from "../components/new-transaction-form";
-import { useCreateTransaction, useDeleteTransaction, useGetTransactions } from "../config/hooks";
+import { useCreateTransaction, useDeleteTransaction, useGetTransactions, useUpdateTransaction } from "../config/hooks";
 import { TransactionsTable } from "../components/transactions-table";
 
 export const TransactionsPage = () => {
@@ -10,6 +10,7 @@ export const TransactionsPage = () => {
 
     const { data, isLoading, isError } = useGetTransactions();
     const { deleteTransaction } = useDeleteTransaction();
+    const { updateTransaction } = useUpdateTransaction();
 
     if (isLoading) {
         return <div>Loading...</div>
@@ -39,7 +40,10 @@ export const TransactionsPage = () => {
                 handleCreate={(data) => { createTransaction(data); onOpenChange(); }}
                 isOpen={isOpen} />
 
-            <TransactionsTable data={data!} handleDelete={(id) => deleteTransaction(id)} />
+            <TransactionsTable
+                data={data!}
+                handleDelete={(id) => deleteTransaction(id)}
+                handleUpdate={(req) => updateTransaction(req)} />
         </div>
     )
 }
