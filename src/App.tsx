@@ -7,6 +7,7 @@ import { ResetPasswordPage } from "./auth/pages/reset-password"
 import { DashboardPage } from "./dashboard"
 import { TransactionsPage } from "./transaction/pages"
 import { CategoriesPage } from "./category/pages"
+import { BudgetPage } from "./budget/pages"
 
 export const App = () => {
 	return (
@@ -16,6 +17,7 @@ export const App = () => {
 				<Route path="/dashboard" element={<DashboardPage />} />
 				<Route path="/transactions" element={<TransactionsPage />} />
 				<Route path="/categories" element={<CategoriesPage />} />
+				<Route path="/budget" element={<BudgetPage />} />
 			</Route>
 			<Route element={<UnauthenticatedLayout />}>
 				<Route path="/signup" element={<SignupPage />} />
