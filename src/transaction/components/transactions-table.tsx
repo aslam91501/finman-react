@@ -9,6 +9,8 @@ import { UpdateTransactionForm } from "./update-transaction-form"
 import type { UpdateTransactionRequest } from "../config/models"
 import { TransactionDetailModal } from "./transaction-detail-modal"
 import { format } from "date-fns"
+import { useEffect, useState } from "react"
+import { useTransactionFilers } from "../config/hooks"
 
 interface Props {
     data: PageResult<Transaction>
@@ -20,6 +22,23 @@ export const TransactionsTable = ({ data, handleDelete, handleUpdate }: Props) =
     const page = data.page;
     const totalPages = data.totalPages;
     const items = data.items;
+
+    const { toggle: deleteToggle, isOpen: deleteIsOpen } = useMultiModal();
+    const { toggle: updateToggle, isOpen: updateIsOpen } = useMultiModal();
+    const { toggle: detailToggle, isOpen: detailIsOpen } = useMultiModal();
+
+    const { sortColumn, sortDirection, setSort } = useTransactionFilers();
+
+    type Direction = 'ascending' | 'descending'
+
+    const [sortDescriptor, setSortDescriptor] = useState<{ column: string, direction: Direction }>({
+        column: sortColumn,
+        direction: sortDirection
+    })
+
+    useEffect(() => {
+        setSort(sortDescriptor.column, sortDescriptor.direction)
+    }, [sortDescriptor])
 
     const bottomContent = (
         <div className="flex flex-row w-full justify-end">
@@ -39,9 +58,6 @@ export const TransactionsTable = ({ data, handleDelete, handleUpdate }: Props) =
         }
     }
 
-    const { toggle: deleteToggle, isOpen: deleteIsOpen } = useMultiModal();
-    const { toggle: updateToggle, isOpen: updateIsOpen } = useMultiModal();
-    const { toggle: detailToggle, isOpen: detailIsOpen } = useMultiModal();
 
     return (
         // <Skeleton isLoaded={!isLoading}>
@@ -54,13 +70,16 @@ export const TransactionsTable = ({ data, handleDelete, handleUpdate }: Props) =
                 tr: ['border-b', 'hover:bg-gray-50', 'transition-all'],
                 th: ['first:rounded-none', 'last:rounded-none', 'p-4'],
             }}
+
+            onSortChange={(d) => setSortDescriptor(d as { column: string, direction: Direction })}
+            sortDescriptor={{ column: sortDescriptor.column, direction: sortDescriptor.direction }}
         >
             <TableHeader>
-                <TableColumn allowsSorting>Title</TableColumn>
-                <TableColumn allowsSorting>Amount</TableColumn>
-                <TableColumn allowsSorting>Type</TableColumn>
-                <TableColumn allowsSorting>Date</TableColumn>
-                <TableColumn>Actions</TableColumn>
+                <TableColumn key="title" allowsSorting>Title</TableColumn>
+                <TableColumn key="amount" allowsSorting>Amount</TableColumn>
+                <TableColumn key="type" allowsSorting>Type</TableColumn>
+                <TableColumn key="date" allowsSorting>Date</TableColumn>
+                <TableColumn key="actions">Actions</TableColumn>
             </TableHeader>
             <TableBody>
                 {items.map((item) => (

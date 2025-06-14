@@ -23,15 +23,26 @@ export const useTransactionFilers = () => {
         })
     }
 
-    const queryKey = ['transactions', filters.page, filters.search || ''];
+    const setSort = (column: string, direction: 'ascending' | 'descending') => {
+        setFilters({
+            ...filters,
+            sortColumn: column,
+            sortDirection: direction
+        })
+    }
+
+    const queryKey = ['transactions', filters.page, filters.search || '', filters.sortColumn, filters.sortDirection];
 
     return {
         filters,
         page: filters.page,
         search: filters.search,
+        sortColumn: filters.sortColumn,
+        sortDirection: filters.sortDirection,
         queryKey,
         setPage,
-        setSearch
+        setSearch,
+        setSort
     }
 }
 

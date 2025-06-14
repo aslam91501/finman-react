@@ -24,6 +24,7 @@ export const getTransactions = async (userId: string, filters: TransactionFilter
 
     let result = await server.collection('transactions').getList(filters.page, 10, {
         filter,
+        sort: filters.sortDirection === 'ascending' ? `${filters.sortColumn}` : `-${filters.sortColumn}`,
         expand: 'category'
     })
 
