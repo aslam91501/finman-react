@@ -1,4 +1,4 @@
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Dropdown, DropdownTrigger, Button, DropdownMenu, DropdownItem, Chip } from "@heroui/react"
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Dropdown, DropdownTrigger, Button, DropdownMenu, DropdownItem, Chip, Skeleton } from "@heroui/react"
 import { MoreVertical } from "lucide-react"
 import { Paginator } from "../../common/components/paginator"
 import type { PageResult } from "../../common/config/models"
@@ -44,6 +44,7 @@ export const TransactionsTable = ({ data, handleDelete, handleUpdate }: Props) =
     const { toggle: detailToggle, isOpen: detailIsOpen } = useMultiModal();
 
     return (
+        // <Skeleton isLoaded={!isLoading}>
         <Table
             shadow="sm"
             radius="sm"
@@ -105,5 +106,6 @@ export const TransactionsTable = ({ data, handleDelete, handleUpdate }: Props) =
                 ))}
             </TableBody>
         </Table>
+        // </Skeleton>
     )
 }

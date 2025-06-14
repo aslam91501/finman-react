@@ -1,8 +1,10 @@
-import { Button, Input, Spacer, useDisclosure } from "@heroui/react"
-import { Filter, Plus, Search } from "lucide-react"
+import { Button, Input, Spacer, Spinner, useDisclosure } from "@heroui/react"
+import { FileSpreadsheet, Filter, Plus, Search } from "lucide-react"
 import { NewTransactionForm } from "../components/new-transaction-form";
-import { useCreateTransaction, useDeleteTransaction, useGetTransactions, useUpdateTransaction } from "../config/hooks";
+import { useCreateTransaction, useDeleteTransaction, useExportTransactions, useGetTransactions, useTransactionFilers, useUpdateTransaction } from "../config/hooks";
 import { TransactionsTable } from "../components/transactions-table";
+import { useEffect, useState } from "react";
+import { useDebounce } from "@uidotdev/usehooks";
 
 export const TransactionsPage = () => {
     const { isOpen, onOpenChange } = useDisclosure();
@@ -11,10 +13,24 @@ export const TransactionsPage = () => {
     const { data, isLoading, isError } = useGetTransactions();
     const { deleteTransaction } = useDeleteTransaction();
     const { updateTransaction } = useUpdateTransaction();
+    const { exportTransactions } = useExportTransactions();
 
-    if (isLoading) {
-        return <div>Loading...</div>
+    const [search, setSearch] = useState('');
+    const { setSearch: setSearchFilter } = useTransactionFilers();
+    const debouncedSearch = useDebounce(search, 500);
+
+    useEffect(() => {
+        if (debouncedSearch)
+            setSearchFilter(debouncedSearch)
+
+        if (debouncedSearch == '')
+            setSearchFilter(undefined)
+    }, [debouncedSearch])
+
+    const handleExport = () => {
+        exportTransactions(data?.items!);
     }
+
     if (isError) {
         return <div>Error</div>
     }
@@ -24,8 +40,14 @@ export const TransactionsPage = () => {
             <h1 className="text-2xl font-medium">Transactions</h1>
 
             <div className="flex justify-between items-center">
-                <div className="basis-1/3">
-                    <Input placeholder="Search" variant="flat" startContent={<Search size={14} />} />
+                <div className="basis-1/3 flex gap-2">
+                    <Input
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        placeholder="Search" variant="flat" startContent={<Search size={14} />} />
+                    <Button variant="flat" isIconOnly color="success" onPress={handleExport}>
+                        <FileSpreadsheet />
+                    </Button>
                 </div>
 
                 <Spacer />
@@ -40,10 +62,14 @@ export const TransactionsPage = () => {
                 handleCreate={(data) => { createTransaction(data); onOpenChange(); }}
                 isOpen={isOpen} />
 
-            <TransactionsTable
-                data={data!}
-                handleDelete={(id) => deleteTransaction(id)}
-                handleUpdate={(req) => updateTransaction(req)} />
+            {!isLoading &&
+                <TransactionsTable
+                    data={data!}
+                    handleDelete={(id) => deleteTransaction(id)}
+                    handleUpdate={(req) => updateTransaction(req)} />
+            }
+
+            {isLoading && <Spinner />}
         </div>
     )
 }

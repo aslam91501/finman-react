@@ -3,6 +3,9 @@ import type { Category } from "../../category/config/models";
 import { server } from "../../common/config/server";
 import type { NewTransactionRequest, Transaction, UpdateTransactionRequest } from "./models";
 import type { PageResult } from "../../common/config/models";
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+import type { TransactionFilters } from "./stores";
 
 export const createNewTransaction = async (request: NewTransactionRequest) => {
     return await server.collection('transactions').create({
@@ -12,9 +15,15 @@ export const createNewTransaction = async (request: NewTransactionRequest) => {
     })
 }
 
-export const getTransactions = async (userId: string, page: number) => {
-    let result = await server.collection('transactions').getList(page, 10, {
-        filter: `user.id="${userId}"`,
+export const getTransactions = async (userId: string, filters: TransactionFilters) => {
+    let filter = `user.id="${userId}"`;
+
+    if (filters.search) {
+        filter += ` && (title ~ "${filters.search}" || notes ~ "${filters.search}")`;
+    }
+
+    let result = await server.collection('transactions').getList(filters.page, 10, {
+        filter,
         expand: 'category'
     })
 
@@ -43,4 +52,16 @@ export const updateTransaction = async (request: UpdateTransactionRequest) => {
         ...request,
         category: request.categoryId,
     })
+}
+
+export async function exportToExcel<T>(data: T[], fileName: string) {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+
+    saveAs(blob, `${fileName}.xlsx`);
 }

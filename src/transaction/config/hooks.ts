@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import type { NewTransactionRequest, UpdateTransactionRequest } from "./models"
-import { createNewTransaction, deleteTransaction, getTransactions, updateTransaction } from "./services"
+import type { NewTransactionRequest, Transaction, UpdateTransactionRequest } from "./models"
+import { createNewTransaction, deleteTransaction, exportToExcel, getTransactions, updateTransaction } from "./services"
 import { useCustomToast } from "../../common/config/hooks";
 import { useAtom } from "jotai";
 import { TransactionFilterStore } from "./stores";
@@ -9,17 +9,36 @@ import { useIsAuthenticated } from "../../auth/config/hooks";
 export const useTransactionFilers = () => {
     const [filters, setFilters] = useAtom(TransactionFilterStore);
 
+    const setPage = (page: number) => {
+        setFilters({
+            ...filters,
+            page
+        })
+    }
+
+    const setSearch = (search: string | undefined) => {
+        setFilters({
+            ...filters,
+            search
+        })
+    }
+
+    const queryKey = ['transactions', filters.page, filters.search || ''];
+
     return {
-        page: filters.page,
         filters,
-        setFilters
+        page: filters.page,
+        search: filters.search,
+        queryKey,
+        setPage,
+        setSearch
     }
 }
 
 
 export const useCreateTransaction = (closeFn?: () => void) => {
     const queryClient = useQueryClient();
-    const { page } = useTransactionFilers();
+    const { queryKey } = useTransactionFilers();
 
     const { toast } = useCustomToast();
     const { mutate, status } = useMutation({
@@ -27,7 +46,7 @@ export const useCreateTransaction = (closeFn?: () => void) => {
         onSuccess: () => {
             toast('Added Transaction')
             queryClient.invalidateQueries({
-                queryKey: ['transactions', page]
+                queryKey
             })
             closeFn?.()
         },
@@ -46,12 +65,12 @@ export const useCreateTransaction = (closeFn?: () => void) => {
 
 
 export const useGetTransactions = () => {
-    const { page } = useTransactionFilers();
+    const { filters, queryKey } = useTransactionFilers();
     const { userData } = useIsAuthenticated();
 
     const { data, isLoading, isError } = useQuery({
-        queryKey: ['transactions', page],
-        queryFn: () => getTransactions(userData?.id!, page),
+        queryKey,
+        queryFn: () => getTransactions(userData?.id!, filters),
     })
 
     return {
@@ -64,7 +83,7 @@ export const useGetTransactions = () => {
 
 export const useDeleteTransaction = () => {
     const queryClient = useQueryClient();
-    const { page } = useTransactionFilers();
+    const { queryKey } = useTransactionFilers();
 
     const { toast } = useCustomToast();
     const { mutate, status } = useMutation({
@@ -72,7 +91,7 @@ export const useDeleteTransaction = () => {
         onSuccess: () => {
             toast('Deleted Transaction')
             queryClient.invalidateQueries({
-                queryKey: ['transactions', page]
+                queryKey
             })
         },
         onError: () => {
@@ -88,7 +107,7 @@ export const useDeleteTransaction = () => {
 
 export const useUpdateTransaction = () => {
     const queryClient = useQueryClient();
-    const { page } = useTransactionFilers();
+    const { queryKey } = useTransactionFilers();
 
     const { toast } = useCustomToast();
     const { mutate, status } = useMutation({
@@ -96,7 +115,7 @@ export const useUpdateTransaction = () => {
         onSuccess: () => {
             toast('Updated Transaction')
             queryClient.invalidateQueries({
-                queryKey: ['transactions', page]
+                queryKey
             })
         },
         onError: () => {
@@ -106,6 +125,23 @@ export const useUpdateTransaction = () => {
 
     return {
         updateTransaction: mutate,
+        isLoading: status === 'pending'
+    }
+}
+
+
+export const useExportTransactions = () => {
+    const { toast } = useCustomToast();
+
+    const { mutate, status } = useMutation({
+        mutationFn: (data: Transaction[]) => exportToExcel(data, 'transactions-' + new Date().toISOString()),
+        onError: () => {
+            toast('Failed to export Transactions')
+        }
+    })
+
+    return {
+        exportTransactions: mutate,
         isLoading: status === 'pending'
     }
 }
