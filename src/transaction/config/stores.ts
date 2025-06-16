@@ -5,7 +5,9 @@ export interface TransactionFilters {
     search?: string;
     sortColumn: string;
     sortDirection: 'ascending' | 'descending';
+    categoryId?: string;
     type: 'INCOME' | 'EXPENSE' | 'ALL';
+    date?: Date;
 }
 
 export const TransactionFilterStore = atom<TransactionFilters>({
@@ -13,5 +15,7 @@ export const TransactionFilterStore = atom<TransactionFilters>({
     search: undefined,
     sortColumn: 'date',
     sortDirection: 'descending',
-    type: 'ALL'
+    categoryId: undefined,
+    type: 'ALL',
+    date: undefined
 })

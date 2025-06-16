@@ -6,12 +6,14 @@ import type { PageResult } from "../../common/config/models";
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import type { TransactionFilters } from "./stores";
+import { format } from "date-fns";
 
 export const createNewTransaction = async (request: NewTransactionRequest) => {
     return await server.collection('transactions').create({
         ...request,
         user: request.userId,
         category: request.categoryId,
+        date: format(request.date, 'yyyy-MM-dd')
     })
 }
 
@@ -24,6 +26,14 @@ export const getTransactions = async (userId: string, filters: TransactionFilter
 
     if (filters.type !== 'ALL') {
         filter += ` && type="${filters.type}"`;
+    }
+
+    if (filters.categoryId) {
+        filter += ` && category.id="${filters.categoryId}"`;
+    }
+
+    if (filters.date) {
+        filter += ` && date="${format(filters.date, 'yyyy-MM-dd')}"`;
     }
 
     let result = await server.collection('transactions').getList(filters.page, 10, {
@@ -56,6 +66,7 @@ export const updateTransaction = async (request: UpdateTransactionRequest) => {
     return await server.collection('transactions').update(request.id, {
         ...request,
         category: request.categoryId,
+        date: format(request.date, 'yyyy-MM-dd')
     })
 }
 

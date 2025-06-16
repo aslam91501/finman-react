@@ -40,11 +40,23 @@ export const useTransactionFilers = () => {
         })
     }
 
+    const setCategoryId = (categoryId: string | undefined) => {
+        setFilters({
+            ...filters,
+            page: 1,
+            categoryId
+        })
+    }
+
     const getCurrentFilterCount = () => {
         let count = 0;
         if (filters.search)
             count++;
         if (filters.type !== 'ALL')
+            count++;
+        if (filters.categoryId)
+            count++;
+        if (filters.date)
             count++;
         return count;
     }
@@ -55,11 +67,20 @@ export const useTransactionFilers = () => {
             search: undefined,
             sortColumn: 'date',
             sortDirection: 'descending',
-            type: 'ALL'
+            type: 'ALL',
+            categoryId: undefined
         })
     }
 
-    const queryKey = ['transactions', filters.page, filters.search || '', filters.sortColumn, filters.sortDirection, filters.type];
+    const setDate = (date: Date) => {
+        setFilters({
+            ...filters,
+            page: 1,
+            date
+        })
+    }
+
+    const queryKey = ['transactions', filters.page, filters.search || '', filters.sortColumn, filters.sortDirection, filters.type, filters.categoryId, filters.date?.toISOString()];
 
     return {
         filters,
@@ -68,11 +89,15 @@ export const useTransactionFilers = () => {
         sortColumn: filters.sortColumn,
         sortDirection: filters.sortDirection,
         type: filters.type,
+        categoryId: filters.categoryId,
+        date: filters.date,
         queryKey,
         setPage,
         setSearch,
         setSort,
         setType,
+        setCategoryId,
+        setDate,
         getCurrentFilterCount,
         clearFilters
     }
