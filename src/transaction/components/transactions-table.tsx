@@ -1,4 +1,4 @@
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Dropdown, DropdownTrigger, Button, DropdownMenu, DropdownItem, Chip, Skeleton } from "@heroui/react"
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Dropdown, DropdownTrigger, Button, DropdownMenu, DropdownItem, Chip } from "@heroui/react"
 import { MoreVertical } from "lucide-react"
 import { Paginator } from "../../common/components/paginator"
 import type { PageResult } from "../../common/config/models"

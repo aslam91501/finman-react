@@ -5,11 +5,13 @@ export interface TransactionFilters {
     search?: string;
     sortColumn: string;
     sortDirection: 'ascending' | 'descending';
+    type: 'INCOME' | 'EXPENSE' | 'ALL';
 }
 
 export const TransactionFilterStore = atom<TransactionFilters>({
     page: 1,
     search: undefined,
     sortColumn: 'date',
-    sortDirection: 'descending'
+    sortDirection: 'descending',
+    type: 'ALL'
 })

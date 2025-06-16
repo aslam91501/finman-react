@@ -1,10 +1,12 @@
-import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, Textarea } from "@heroui/react"
+import { Button, DatePicker, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, Textarea } from "@heroui/react"
 import { UpdateTransactionSchema, type UpdateTransactionRequest, type Transaction } from "../config/models"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useIsAuthenticated } from "../../auth/config/hooks"
 import { useGetCategories } from "../../category/config/hooks"
+import { format } from "date-fns"
+import { getLocalTimeZone, parseDate, type DateValue } from "@internationalized/date"
 
 interface Props {
     onOpenChange: () => void,
@@ -17,7 +19,7 @@ export const UpdateTransactionForm = ({ onOpenChange, isOpen, handleUpdate, tran
     const { userData } = useIsAuthenticated();
     const { data: categories } = useGetCategories();
 
-    const { register, handleSubmit, watch, formState: { errors } } = useForm<UpdateTransactionRequest>({
+    const { register, handleSubmit, watch, formState: { errors }, setValue } = useForm<UpdateTransactionRequest>({
         resolver: zodResolver(UpdateTransactionSchema),
         defaultValues: {
             id: transaction.id,
@@ -30,6 +32,13 @@ export const UpdateTransactionForm = ({ onOpenChange, isOpen, handleUpdate, tran
             userId: userData?.id!
         }
     })
+
+    const [date, setDate] = useState<DateValue | null>(parseDate(format(transaction.date, 'yyyy-MM-dd')));
+
+    useEffect(() => {
+        setValue('date', date?.toDate(getLocalTimeZone()) || new Date())
+    }, [date])
+
 
     const onSubmit = handleSubmit(data => {
         handleUpdate(data);
@@ -59,6 +68,17 @@ export const UpdateTransactionForm = ({ onOpenChange, isOpen, handleUpdate, tran
                             errorMessage={errors.amount?.message}
                             {...register("amount", { valueAsNumber: true })}
                         />
+
+                        <DatePicker
+                            isInvalid={!!errors.date}
+                            errorMessage={errors.date?.message}
+                            isRequired
+                            showMonthAndYearPickers
+                            // @ts-ignore
+                            value={date}
+                            onChange={setDate}
+                        />
+
 
 
                         <Select

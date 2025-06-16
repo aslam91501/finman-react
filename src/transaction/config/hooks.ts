@@ -19,6 +19,7 @@ export const useTransactionFilers = () => {
     const setSearch = (search: string | undefined) => {
         setFilters({
             ...filters,
+            page: 1,
             search
         })
     }
@@ -31,7 +32,34 @@ export const useTransactionFilers = () => {
         })
     }
 
-    const queryKey = ['transactions', filters.page, filters.search || '', filters.sortColumn, filters.sortDirection];
+    const setType = (type: 'INCOME' | 'EXPENSE' | 'ALL') => {
+        setFilters({
+            ...filters,
+            page: 1,
+            type
+        })
+    }
+
+    const getCurrentFilterCount = () => {
+        let count = 0;
+        if (filters.search)
+            count++;
+        if (filters.type !== 'ALL')
+            count++;
+        return count;
+    }
+
+    const clearFilters = () => {
+        setFilters({
+            page: 1,
+            search: undefined,
+            sortColumn: 'date',
+            sortDirection: 'descending',
+            type: 'ALL'
+        })
+    }
+
+    const queryKey = ['transactions', filters.page, filters.search || '', filters.sortColumn, filters.sortDirection, filters.type];
 
     return {
         filters,
@@ -39,10 +67,14 @@ export const useTransactionFilers = () => {
         search: filters.search,
         sortColumn: filters.sortColumn,
         sortDirection: filters.sortDirection,
+        type: filters.type,
         queryKey,
         setPage,
         setSearch,
-        setSort
+        setSort,
+        setType,
+        getCurrentFilterCount,
+        clearFilters
     }
 }
 

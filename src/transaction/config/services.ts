@@ -22,6 +22,10 @@ export const getTransactions = async (userId: string, filters: TransactionFilter
         filter += ` && (title ~ "${filters.search}" || notes ~ "${filters.search}")`;
     }
 
+    if (filters.type !== 'ALL') {
+        filter += ` && type="${filters.type}"`;
+    }
+
     let result = await server.collection('transactions').getList(filters.page, 10, {
         filter,
         sort: filters.sortDirection === 'ascending' ? `${filters.sortColumn}` : `-${filters.sortColumn}`,

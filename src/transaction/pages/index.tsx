@@ -5,9 +5,11 @@ import { useCreateTransaction, useDeleteTransaction, useExportTransactions, useG
 import { TransactionsTable } from "../components/transactions-table";
 import { useEffect, useState } from "react";
 import { useDebounce } from "@uidotdev/usehooks";
+import { TransactionFilterModal } from "../components/transaction-filter-modal";
 
 export const TransactionsPage = () => {
     const { isOpen, onOpenChange } = useDisclosure();
+    const { isOpen: filterIsOpen, onOpenChange: filterOnOpenChange } = useDisclosure();
     const { createTransaction } = useCreateTransaction();
 
     const { data, isLoading, isError } = useGetTransactions();
@@ -16,7 +18,7 @@ export const TransactionsPage = () => {
     const { exportTransactions } = useExportTransactions();
 
     const [search, setSearch] = useState('');
-    const { setSearch: setSearchFilter } = useTransactionFilers();
+    const { setSearch: setSearchFilter, getCurrentFilterCount, clearFilters } = useTransactionFilers();
     const debouncedSearch = useDebounce(search, 500);
 
     useEffect(() => {
@@ -53,7 +55,8 @@ export const TransactionsPage = () => {
                 <Spacer />
 
                 <div className="flex gap-2">
-                    <Button variant="light" endContent={<Filter size={14} />}>Filters</Button>
+                    {getCurrentFilterCount() > 0 && <Button variant="light" onPress={clearFilters}>Clear Filters</Button>}
+                    <Button variant="light" endContent={<Filter size={14} />} onPress={filterOnOpenChange}>Filters {getCurrentFilterCount() > 0 && `(${getCurrentFilterCount()})`}</Button>
                     <Button onPress={onOpenChange} variant="solid" color="primary" endContent={<Plus size={14} />}>New Transaction</Button>
                 </div>
             </div>
@@ -61,6 +64,8 @@ export const TransactionsPage = () => {
                 onOpenChange={onOpenChange}
                 handleCreate={(data) => { createTransaction(data); onOpenChange(); }}
                 isOpen={isOpen} />
+
+            <TransactionFilterModal isOpen={filterIsOpen} onOpenChange={filterOnOpenChange} />
 
             {!isLoading &&
                 <TransactionsTable
