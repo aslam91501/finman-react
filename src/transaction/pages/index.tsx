@@ -41,7 +41,7 @@ export const TransactionsPage = () => {
         <div className="flex flex-col gap-5">
             <h1 className="text-2xl font-medium">Transactions</h1>
 
-            <div className="flex justify-between items-center">
+            <div className="hidden lg:flex justify-between items-center">
                 <div className="basis-1/3 flex gap-2">
                     <Input
                         value={search}
@@ -67,12 +67,14 @@ export const TransactionsPage = () => {
 
             <TransactionFilterModal isOpen={filterIsOpen} onOpenChange={filterOnOpenChange} />
 
-            {!isLoading &&
-                <TransactionsTable
-                    data={data!}
-                    handleDelete={(id) => deleteTransaction(id)}
-                    handleUpdate={(req) => updateTransaction(req)} />
-            }
+            <div className="hidden lg:block">
+                {!isLoading &&
+                    <TransactionsTable
+                        data={data!}
+                        handleDelete={(id) => deleteTransaction(id)}
+                        handleUpdate={(req) => updateTransaction(req)} />
+                }
+            </div>
 
             {isLoading && <Spinner />}
         </div>

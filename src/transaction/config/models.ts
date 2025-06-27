@@ -8,7 +8,7 @@ export interface Transaction {
     title: string,
     notes: string,
     amount: number,
-    date: Date,
+    date: string,
     type: TransactionType,
     category?: Category
 }

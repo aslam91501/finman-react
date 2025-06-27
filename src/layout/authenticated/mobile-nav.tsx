@@ -27,11 +27,11 @@ export const MobileNav = () => {
                         {/* <ModalHeader className="flex flex-col gap-1">Menu</ModalHeader> */}
                         <ModalBody className="flex flex-col justify-center">
                             <div className="flex flex-col pl-5 gap-8">
-                                <MobileNavItem link='/dashboard' icon={<LayoutDashboard size={24} />} label="Dashboard" />
-                                <MobileNavItem link='/transactions' icon={<ArrowLeftRight size={24} />} label="Transactions" />
-                                <MobileNavItem link='/budget' icon={<Wallet size={24} />} label="Budget" />
-                                <MobileNavItem link='/categories' icon={<Box size={24} />} label="Categories" />
-                                <MobileNavItem link='/profile' icon={<ShieldUser size={24} />} label="Profile" />
+                                <MobileNavItem link='/dashboard' icon={<LayoutDashboard size={24} />} label="Dashboard" onOpenChange={onOpenChange} />
+                                <MobileNavItem link='/transactions' icon={<ArrowLeftRight size={24} />} label="Transactions" onOpenChange={onOpenChange} />
+                                <MobileNavItem link='/budget' icon={<Wallet size={24} />} label="Budget" onOpenChange={onOpenChange} />
+                                <MobileNavItem link='/categories' icon={<Box size={24} />} label="Categories" onOpenChange={onOpenChange} />
+                                <MobileNavItem link='/profile' icon={<ShieldUser size={24} />} label="Profile" onOpenChange={onOpenChange} />
                             </div>
                         </ModalBody>
                     </>
@@ -42,15 +42,19 @@ export const MobileNav = () => {
 }
 
 
-const MobileNavItem = ({ link, icon, label: text }: {
+const MobileNavItem = ({ link, icon, label: text, onOpenChange }: {
     icon: React.ReactNode,
     link: string,
-    label: string
+    label: string,
+    onOpenChange?: () => void
 }) => {
     const navigate = useNavigate();
     return (
         <div
-            onClick={() => navigate(link)}
+            onClick={() => {
+                navigate(link);
+                onOpenChange?.()
+            }}
             className="flex flex-row items-center gap-5"
         >
             <i>{icon}</i>
