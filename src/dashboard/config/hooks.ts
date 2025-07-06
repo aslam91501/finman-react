@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchLast30DaysTransactions, fetchRecentIncomeAndExpense } from "./services";
+import { fetchCategoryData, fetchCurrentMonthBudget, fetchLast30DaysTransactions, fetchRecentIncomeAndExpense } from "./services";
 import type { DailyFinancialData } from "./models";
 import { useIsAuthenticated } from "../../auth/config/hooks";
 
@@ -29,3 +29,27 @@ export const useRecentIncomeAndExpense = () => {
 
     return { data, isLoading, error };
 }
+
+
+export const useCategoryData = () => {
+    const { userData } = useIsAuthenticated();
+
+    return useQuery({
+        queryKey: ['category-data', userData?.id],
+        queryFn: () => fetchCategoryData(userData?.id!),
+        enabled: !!userData?.id,
+        retry: 2,
+    });
+};
+
+
+export const useCurrentMonthBudget = () => {
+    const { userData } = useIsAuthenticated();
+
+    return useQuery({
+        queryKey: ['budget', 'current-month', userData?.id],
+        queryFn: () => fetchCurrentMonthBudget(userData?.id!),
+        enabled: !!userData?.id,
+        retry: 2,
+    });
+};
