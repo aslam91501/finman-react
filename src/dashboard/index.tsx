@@ -19,9 +19,15 @@ export const DashboardPage = () => {
         ...expenses.map(item => ({ ...item, type: 'EXPENSE' }))
     ];
 
-    useEffect(() => {
-        console.log('Combined Data:', combinedData);
-    }, [combinedData]);
+    const getBudgetColor = (budget: number, expenses: number): 'success' | 'danger' | 'warning' => {
+        if (expenses > budget) {
+            return 'danger';
+        } else if (expenses > budget * 0.8) {
+            return 'warning';
+        } else {
+            return 'success';
+        }
+    };
 
 
     if (lastMonthTransactionsQuery.isLoading || incomeExpenseQuery.isLoading || categoryDataQuery.isLoading || budgetQuery.isLoading) {
@@ -159,7 +165,7 @@ export const DashboardPage = () => {
                         {(budgetQuery.data && budgetQuery.data.budget) && <div className="mt-5 flex flex-col gap-3">
                             <Progress
                                 color={
-                                    budgetQuery.data.isOverBudget ? 'danger' : 'success'
+                                    getBudgetColor(budgetQuery.data?.budget.amount!, budgetQuery.data?.totalExpenses)
                                 }
                                 value={(budgetQuery.data?.totalExpenses / budgetQuery.data?.budget.amount!) * 100} />
 
