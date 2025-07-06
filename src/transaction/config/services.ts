@@ -70,8 +70,19 @@ export const updateTransaction = async (request: UpdateTransactionRequest) => {
     })
 }
 
-export async function exportToExcel<T>(data: T[], fileName: string) {
-    const worksheet = XLSX.utils.json_to_sheet(data);
+export async function exportToExcel(data: Transaction[], fileName: string) {
+    const transformedData = data.map(item => {
+        return {
+            title: item.title,
+            amount: item.amount,
+            type: item.type,
+            date: item.date,
+            category: item.category?.name,
+            notes: item.notes
+        }
+    })
+
+    const worksheet = XLSX.utils.json_to_sheet(transformedData);
     const workbook = XLSX.utils.book_new();
 
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
