@@ -1,4 +1,4 @@
-import { ArrowLeftRight, Box, LayoutDashboard, ShieldUser, Wallet } from 'lucide-react'
+import { ArrowLeftRight, Box, LayoutDashboard, Wallet } from 'lucide-react'
 import logo from '/logo.svg'
 import logoIcon from '/logo-icon-only.svg'
 import { cn, Spacer, Tooltip } from '@heroui/react'
@@ -23,7 +23,7 @@ export const Sidebar = ({ isCollapsed }: {
             <SidebarItem link='/transactions' icon={<ArrowLeftRight size={24} />} label="Transactions" collapsed={isCollapsed} />
             <SidebarItem link='/budget' icon={<Wallet size={24} />} label="Budget" collapsed={isCollapsed} />
             <SidebarItem link='/categories' icon={<Box size={24} />} label="Categories" collapsed={isCollapsed} />
-            <SidebarItem link='/profile' icon={<ShieldUser size={24} />} label="Profile" collapsed={isCollapsed} />
+            {/* <SidebarItem link='/profile' icon={<ShieldUser size={24} />} label="Profile" collapsed={isCollapsed} /> */}
         </aside>
     )
 }

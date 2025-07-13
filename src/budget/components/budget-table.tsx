@@ -1,4 +1,4 @@
-import { Table, TableBody, TableHeader, TableColumn, TableRow, TableCell, Dropdown, DropdownTrigger, Button, DropdownMenu, DropdownItem } from "@heroui/react"
+import { Table, TableBody, TableHeader, TableColumn, TableRow, TableCell, Dropdown, DropdownTrigger, Button, DropdownMenu, DropdownItem, Chip } from "@heroui/react"
 import { MoreVertical } from "lucide-react"
 import { useMultiModal } from "../../common/config/hooks"
 import { type Budget } from "../config/models"
@@ -56,9 +56,10 @@ export const BudgetTable = ({ data, handleUpdate, handleDelete }: Props) => {
             }}
         >
             <TableHeader>
-                <TableColumn allowsSorting>Year</TableColumn>
-                <TableColumn allowsSorting>Month</TableColumn>
-                <TableColumn allowsSorting>Amount</TableColumn>
+                <TableColumn>Year</TableColumn>
+                <TableColumn>Month</TableColumn>
+                <TableColumn>Is Set</TableColumn>
+                <TableColumn>Amount</TableColumn>
                 <TableColumn>Actions</TableColumn>
             </TableHeader>
             <TableBody>
@@ -66,6 +67,7 @@ export const BudgetTable = ({ data, handleUpdate, handleDelete }: Props) => {
                     <TableRow key={item}>
                         <TableCell>{year}</TableCell>
                         <TableCell>{getMonth(item)}</TableCell>
+                        <TableCell>{budgetList.get(item)?.amount ? <Chip variant="flat" color="success">Yes</Chip> : <Chip variant="flat" color="danger">No</Chip>}</TableCell>
                         <TableCell>{budgetList.get(item)?.amount || 'None Set'}</TableCell>
                         <TableCell>
                             <Dropdown>

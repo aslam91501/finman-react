@@ -1,7 +1,7 @@
 import { CartesianGrid, Cell, Legend, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 import { useCategoryData, useCurrentMonthBudget, useLast30DaysTransactions, useRecentIncomeAndExpense } from "./config/hooks"
 import { Button, Card, Progress, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react";
-import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 
 export const DashboardPage = () => {
@@ -28,6 +28,8 @@ export const DashboardPage = () => {
             return 'success';
         }
     };
+
+    const navigate = useNavigate();
 
 
     if (lastMonthTransactionsQuery.isLoading || incomeExpenseQuery.isLoading || categoryDataQuery.isLoading || budgetQuery.isLoading) {
@@ -119,7 +121,7 @@ export const DashboardPage = () => {
                         </Table>
                     }
 
-                    <Button className="mt-5 w-full" color="primary" variant="light">View All Transactions</Button>
+                    <Button onPress={() => navigate('/transactions')} className="mt-5 w-full" color="primary" variant="light">View All Transactions</Button>
                 </Card>
 
 
@@ -152,7 +154,7 @@ export const DashboardPage = () => {
                         </Table>
                     }
 
-                    <Button className="mt-5 w-full" color="primary" variant="light">View All Transactions</Button>
+                    <Button onPress={() => navigate('/transactions')} className="mt-5 w-full" color="primary" variant="light">View All Transactions</Button>
                 </Card>
             </div>
 

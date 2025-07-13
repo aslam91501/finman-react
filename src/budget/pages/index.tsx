@@ -1,5 +1,5 @@
 import { Button, Card } from "@heroui/react"
-import { ChevronDown } from "lucide-react"
+// import { ChevronDown } from "lucide-react"
 import { BudgetTable } from "../components/budget-table"
 import { useGetBudgetList, useSetBudget, useDeleteBudget } from "../config/hooks"
 
@@ -14,10 +14,10 @@ export const BudgetPage = () => {
     return (
         <div className="flex flex-col gap-5">
             <h1 className="text-2xl font-medium">Budget</h1>
-
+            {/* 
             <div className="flex justify-end items-center gap-2">
                 <Button variant="light" endContent={<ChevronDown size={14} />}>2025</Button>
-            </div>
+            </div> */}
 
 
             <BudgetTable
